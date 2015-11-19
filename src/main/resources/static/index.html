@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hello WebSocket</title>
+<script src="sockjs-0.3.4.js"></script>
+<script src="stomp.js"></script>
+<script type="text/javascript">
+	var stompClient = null;
+
+	function setConnected(connected) {
+		document.getElementById('response').innerHTML = '';
+	}
+
+	function connect() {
+		var socket = new SockJS('/roll');
+		stompClient = Stomp.over(socket);
+		stompClient.connect({}, function(frame) {
+			setConnected(true);
+			console.log('Connected: ' + frame);
+			stompClient.subscribe('/topic/rolls', function(dieRoll) {
+				showRoll(JSON.parse(dieRoll.body).name, JSON.parse(dieRoll.body).numSides, JSON.parse(dieRoll.body).result);
+			});
+		});
+	}
+
+	function disconnect() {
+		if (stompClient != null) {
+			stompClient.disconnect();
+		}
+		setConnected(false);
+		console.log("Disconnected");
+	}
+
+	function roll(numSides) {
+		name = document.getElementById('name').value;
+		charName = document.getElementById('char').value;
+		console.log(name);
+		console.log(numSides);
+		stompClient.send("/app/roll", {}, JSON.stringify({
+			'name' : charName + ' (' + name + ')',
+			'numSides' : numSides
+		}));
+	}
+	
+	var color_codes = {};
+	function stringToColorCode(str) {
+	    return (str in color_codes) ? color_codes[str] : (color_codes[str] = '#'+ ('000000' + (Math.random()*0xFFFFFF<<0).toString(16)).slice(-6));
+	}
+
+	function showRoll(name, numSides, result) {
+		var response = document.getElementById('response');
+		var p = document.createElement('p');
+		p.style.wordWrap = 'break-word';
+		var dl = document.createElement('dl');
+		var dt = document.createElement('dt');
+		dt.appendChild(document.createTextNode(name));
+		var dd = document.createElement('dd');
+		dd.appendChild(document.createTextNode('d' + numSides + ' : ' + result));
+		dl.appendChild(dt);
+		dl.appendChild(dd);
+		p.appendChild(dl);
+		p.style.color = stringToColorCode(name);
+		response.appendChild(p);
+	}
+</script>
+
+<style>
+	div.rollContainer {overflow-y : scroll; height : 500px}
+</style>
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"
+	integrity="sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ=="
+	crossorigin="anonymous">
+
+</head>
+<body onload="connect()">
+	<noscript>
+		<h2 style="color: #ff0000">Seems your browser doesn't support
+			Javascript! Websocket relies on Javascript being enabled. Please
+			enable Javascript and reload this page!</h2>
+	</noscript>
+	<div class="container">
+		<div id="conversationDiv">
+			<form class="form-inline">
+				<p>
+				<div class="form-group">
+					<input type="text" class="form-control intput-lg" id="name" placeholder="Name"></input>
+				</div>
+				<div class="form-group">
+					<input type="text" class="form-control intput-lg" id="char" placeholder="Char"></input>
+				</div>
+				</p>
+				<p>
+				<button id="roll20" onclick="roll(20);" type="button" class="btn btn-default btn-lg">d20</button>
+				<button id="roll12" onclick="roll(12);" type="button" class="btn btn-default btn-lg">d12</button>
+				<button id="roll10" onclick="roll(10);" type="button" class="btn btn-default btn-lg">d10</button>
+				<button id="roll8" onclick="roll(8);" type="button" class="btn btn-default btn-lg">d8</button>
+				<button id="roll6" onclick="roll(6);" type="button" class="btn btn-default btn-lg">d6</button>
+				<button id="roll4" onclick="roll(4);" type="button" class="btn btn-default btn-lg">d4</button>
+				</p>
+			</form>
+<!-- 			<div class="rollContainer"> -->
+				<p id="response"></p>
+<!-- 			</div> -->
+		</div>
+	</div>
+</body>
+</html>
