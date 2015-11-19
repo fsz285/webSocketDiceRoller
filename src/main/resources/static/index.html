@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Hello WebSocket</title>
+<title>DiceRoller</title>
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="sockjs-0.3.4.js"></script>
 <script src="stomp.js"></script>
 <script type="text/javascript">
@@ -34,8 +35,6 @@
 	function roll(numSides) {
 		name = document.getElementById('name').value;
 		charName = document.getElementById('char').value;
-		console.log(name);
-		console.log(numSides);
 		stompClient.send("/app/roll", {}, JSON.stringify({
 			'name' : charName + ' (' + name + ')',
 			'numSides' : numSides
@@ -49,18 +48,29 @@
 
 	function showRoll(name, numSides, result) {
 		var response = document.getElementById('response');
-		var p = document.createElement('p');
-		p.style.wordWrap = 'break-word';
-		var dl = document.createElement('dl');
-		var dt = document.createElement('dt');
-		dt.appendChild(document.createTextNode(name));
+		var dl;
+		var lastRollerName;
+		if ($(response).find("p").length > 0) {
+			dl = $(response).find("p").last().find("dl").first();
+			lastRollerName = dl.find("dt").first().text();
+		}
 		var dd = document.createElement('dd');
 		dd.appendChild(document.createTextNode('d' + numSides + ' : ' + result));
-		dl.appendChild(dt);
-		dl.appendChild(dd);
-		p.appendChild(dl);
-		p.style.color = stringToColorCode(name);
-		response.appendChild(p);
+		if (lastRollerName == name) {
+			dl.append(dd);
+		} else {
+			var p = document.createElement('p');
+			p.style.wordWrap = 'break-word';
+			var dl = document.createElement('dl');
+			var dt = document.createElement('dt');
+			dt.appendChild(document.createTextNode(name));
+			
+			dl.appendChild(dt);
+			dl.appendChild(dd);
+			p.appendChild(dl);
+			p.style.color = stringToColorCode(name);
+			response.appendChild(p);
+		}
 		var rollContainer = document.getElementById('rollContainer');
 		rollContainer.scrollTop = rollContainer.scrollHeight;
 	}
