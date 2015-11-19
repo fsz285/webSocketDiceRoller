@@ -61,11 +61,13 @@
 		p.appendChild(dl);
 		p.style.color = stringToColorCode(name);
 		response.appendChild(p);
+		var rollContainer = document.getElementById('rollContainer');
+		rollContainer.scrollTop = rollContainer.scrollHeight;
 	}
 </script>
 
 <style>
-	div.rollContainer {overflow-y : scroll; height : 500px}
+	div.rollContainer {overflow-y : scroll; height : 600px}
 </style>
 
 <!-- Latest compiled and minified CSS -->
@@ -101,9 +103,9 @@
 				<button id="roll4" onclick="roll(4);" type="button" class="btn btn-default btn-lg">d4</button>
 				</p>
 			</form>
-<!-- 			<div class="rollContainer"> -->
+			<div id="rollContainer" class="rollContainer">
 				<p id="response"></p>
-<!-- 			</div> -->
+			</div>
 		</div>
 	</div>
 </body>
