@@ -18,5 +18,11 @@ public class DieRollController {
 		return new DieRoll(dieRollRequest.getName(), dieRollRequest.getNumSides(), result,
 				dieRollRequest.getPrivateRoll());
 	}
+	
+	@MessageMapping("/message")
+	@SendTo("/topic/messages")
+	public Message talk(Message message) {
+		return message;
+	}
 
 }
