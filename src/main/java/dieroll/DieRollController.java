@@ -15,7 +15,8 @@ public class DieRollController {
 	@SendTo("/topic/rolls")
 	public DieRoll roll(DieRollRequest dieRollRequest) throws Exception {
 		Integer result = random.nextInt(dieRollRequest.getNumSides()) + 1;
-		return new DieRoll(dieRollRequest.getName(), dieRollRequest.getNumSides(), result);
+		return new DieRoll(dieRollRequest.getName(), dieRollRequest.getNumSides(), result,
+				dieRollRequest.getPrivateRoll());
 	}
 
 }

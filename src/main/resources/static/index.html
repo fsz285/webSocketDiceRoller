@@ -5,76 +5,10 @@
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="sockjs-0.3.4.js"></script>
 <script src="stomp.js"></script>
-<script type="text/javascript">
-	var stompClient = null;
-
-	function setConnected(connected) {
-		document.getElementById('response').innerHTML = '';
-	}
-
-	function connect() {
-		var socket = new SockJS('/roll');
-		stompClient = Stomp.over(socket);
-		stompClient.connect({}, function(frame) {
-			setConnected(true);
-			console.log('Connected: ' + frame);
-			stompClient.subscribe('/topic/rolls', function(dieRoll) {
-				showRoll(JSON.parse(dieRoll.body).name, JSON.parse(dieRoll.body).numSides, JSON.parse(dieRoll.body).result);
-			});
-		});
-	}
-
-	function disconnect() {
-		if (stompClient != null) {
-			stompClient.disconnect();
-		}
-		setConnected(false);
-		console.log("Disconnected");
-	}
-
-	function roll(numSides) {
-		name = document.getElementById('name').value;
-		charName = document.getElementById('char').value;
-		stompClient.send("/app/roll", {}, JSON.stringify({
-			'name' : charName + ' (' + name + ')',
-			'numSides' : numSides
-		}));
-	}
-	
-	var color_codes = {};
-	function stringToColorCode(str) {
-	    return (str in color_codes) ? color_codes[str] : (color_codes[str] = '#'+ ('000000' + (Math.random()*0xFFFFFF<<0).toString(16)).slice(-6));
-	}
-
-	function showRoll(name, numSides, result) {
-		var response = document.getElementById('response');
-		var dl;
-		var lastRollerName;
-		if ($(response).find("p").length > 0) {
-			dl = $(response).find("p").last().find("dl").first();
-			lastRollerName = dl.find("dt").first().text();
-		}
-		var dd = document.createElement('dd');
-		dd.appendChild(document.createTextNode('d' + numSides + ' : ' + result));
-		if (lastRollerName == name) {
-			dl.append(dd);
-		} else {
-			var p = document.createElement('p');
-			p.style.wordWrap = 'break-word';
-			var dl = document.createElement('dl');
-			var dt = document.createElement('dt');
-			dt.appendChild(document.createTextNode(name));
-			
-			dl.appendChild(dt);
-			dl.appendChild(dd);
-			p.appendChild(dl);
-			p.style.color = stringToColorCode(name);
-			response.appendChild(p);
-		}
-		var rollContainer = document.getElementById('rollContainer');
-		rollContainer.scrollTop = rollContainer.scrollHeight;
-	}
-</script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
+<script src="dieroll.js"></script>
 
 <style>
 	div.rollContainer {overflow-y : scroll; height : 600px}
@@ -105,12 +39,15 @@
 				</div>
 				</p>
 				<p>
-				<button id="roll20" onclick="roll(20);" type="button" class="btn btn-default btn-lg">d20</button>
-				<button id="roll12" onclick="roll(12);" type="button" class="btn btn-default btn-lg">d12</button>
-				<button id="roll10" onclick="roll(10);" type="button" class="btn btn-default btn-lg">d10</button>
-				<button id="roll8" onclick="roll(8);" type="button" class="btn btn-default btn-lg">d8</button>
-				<button id="roll6" onclick="roll(6);" type="button" class="btn btn-default btn-lg">d6</button>
-				<button id="roll4" onclick="roll(4);" type="button" class="btn btn-default btn-lg">d4</button>
+					<button id="roll20" onclick="roll(20);" type="button" class="btn btn-default btn-lg">d20</button>
+					<button id="roll12" onclick="roll(12);" type="button" class="btn btn-default btn-lg">d12</button>
+					<button id="roll10" onclick="roll(10);" type="button" class="btn btn-default btn-lg">d10</button>
+					<button id="roll8" onclick="roll(8);" type="button" class="btn btn-default btn-lg">d8</button>
+					<button id="roll6" onclick="roll(6);" type="button" class="btn btn-default btn-lg">d6</button>
+					<button id="roll4" onclick="roll(4);" type="button" class="btn btn-default btn-lg">d4</button>
+				</p>
+				<p>
+					<input type="checkbox" id="isPrivate" data-toggle="toggle"> Geheimer Wurf</input>
 				</p>
 			</form>
 			<div id="rollContainer" class="rollContainer">
