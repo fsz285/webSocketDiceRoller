@@ -1,16 +1,11 @@
-var stompClient = null;
-
-function setConnected(connected) {
-	document.getElementById('response').innerHTML = '';
-}
+var stompClient;
+var messagesClient;
 
 function connectRolls() {
 	var socket = new SockJS('/roll');
-	stompClient = Stomp.over(socket);
-	stompClient.connect({}, function(frame) {
-		setConnected(true);
-		console.log('Connected: ' + frame);
-		stompClient.subscribe('/topic/rolls', function(dieRoll) {
+	rollsClient = Stomp.over(socket);
+	rollsClient.connect({}, function(frame) {
+		rollsClient.subscribe('/topic/rolls', function(dieRoll) {
 			showRoll(JSON.parse(dieRoll.body).name, JSON.parse(dieRoll.body).numSides, JSON.parse(dieRoll.body).result,
 					JSON.parse(dieRoll.body).privateRoll);
 		});
@@ -19,15 +14,23 @@ function connectRolls() {
 
 function connectMessages() {
 	var socket = new SockJS('/message');
-	stompClient = Stomp.over(socket);
-	stompClient.connect({}, function(frame) {
-		setConnected(true);
-		console.log('Connected: ' + frame);
-		stompClient.subscribe('/topic/messages', function(dieRoll) {
-			showMessage(JSON.parse(dieRoll.body).name, JSON.parse(dieRoll.body).message);
+	messagesClient = Stomp.over(socket);
+	try {
+		messagesClient.connect({}, function(frame) {
+			messagesClient.subscribe('/topic/messages', function(dieRoll) {
+				showMessage(JSON.parse(dieRoll.body).name, JSON.parse(dieRoll.body).message);
+			});
 		});
-	});
+	} catch (e) {
+
+	}
+
 }
+
+$(document).ready(function() {
+	connectRolls();
+	connectMessages();
+});
 
 function connect() {
 	connectRolls();
@@ -38,19 +41,11 @@ function makeName(name, charName) {
 	return charName + ' (' + name + ')'
 }
 
-function disconnect() {
-	if (stompClient != null) {
-		stompClient.disconnect();
-	}
-	setConnected(false);
-	console.log("Disconnected");
-}
-
 function roll(numSides) {
 	name = $("#name").val();
 	charName = $("#char").val();
 	isPrivate = $('#isPrivate').prop('checked');
-	stompClient.send("/app/roll", {}, JSON.stringify({
+	rollsClient.send("/app/roll", {}, JSON.stringify({
 		'name' : makeName(name, charName),
 		'numSides' : numSides,
 		'privateRoll' : isPrivate
@@ -58,12 +53,11 @@ function roll(numSides) {
 }
 
 $(document).ready(function() {
-	$("#message").keyup(function (e) {
-	    if (e.keyCode == 13) {
-	    	talk();
-	    }
+	$("#message").keyup(function(e) {
+		if (e.keyCode == 13) {
+			talk();
+		}
 	});
-
 
 });
 
@@ -71,7 +65,7 @@ function talk() {
 	message = $("#message").val();
 	name = $("#name").val();
 	charName = $("#char").val();
-	stompClient.send("/app/message", {}, JSON.stringify({
+	messagesClient.send("/app/message", {}, JSON.stringify({
 		'name' : makeName(name, charName),
 		'message' : message,
 	}));
@@ -95,9 +89,9 @@ function showMessage(name, message) {
 	var dd = document.createElement('dd');
 	var myName = $('#name').val()
 	var myCharName = $('#char').val()
-	
+
 	dd.appendChild(document.createTextNode(message));
-	
+
 	if (lastRollerName == name) {
 		dl.append(dd);
 	} else {
@@ -130,7 +124,7 @@ function showRoll(name, numSides, result, isPrivate) {
 	var myName = $('#name').val()
 	var myCharName = $('#char').val()
 	if (!isPrivate) {
-			dd.appendChild(document.createTextNode('d' + numSides + ' : ' + result));
+		dd.appendChild(document.createTextNode('d' + numSides + ' : ' + result));
 	} else if (isPrivate && name == makeName(myName, myCharName)) {
 		dd.appendChild(document.createTextNode('d' + numSides + ' : ' + result + ' (geheim)'));
 	} else {
