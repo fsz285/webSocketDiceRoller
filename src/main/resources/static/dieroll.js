@@ -29,10 +29,10 @@ function connectMessages() {
 	});
 }
 
-$(document).ready(function connect() {
+function connect() {
 	connectRolls();
 	connectMessages();
-});
+}
 
 function makeName(name, charName) {
 	return charName + ' (' + name + ')'
