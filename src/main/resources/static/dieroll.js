@@ -6,7 +6,9 @@ function connectRolls() {
 	rollsClient = Stomp.over(socket);
 	rollsClient.connect({}, function(frame) {
 		rollsClient.subscribe('/topic/rolls', function(dieRoll) {
-			showRoll(JSON.parse(dieRoll.body).name, JSON.parse(dieRoll.body).numSides, JSON.parse(dieRoll.body).result,
+			showRoll(JSON.parse(dieRoll.body).name,
+					JSON.parse(dieRoll.body).numSides,
+					JSON.parse(dieRoll.body).result,
 					JSON.parse(dieRoll.body).privateRoll);
 		});
 	});
@@ -19,7 +21,8 @@ function connectSettings() {
 	try {
 		settingsClient.connect({}, function(frame) {
 			settingsClient.subscribe('/topic/settings', function(settings) {
-				color_codes[JSON.parse(settings.body).name] = JSON.parse(settings.body).color;
+				color_codes[JSON.parse(settings.body).name] = JSON
+						.parse(settings.body).color;
 				console.log(color_codes);
 			});
 		});
@@ -35,7 +38,8 @@ function connectMessages() {
 	try {
 		messagesClient.connect({}, function(frame) {
 			messagesClient.subscribe('/topic/messages', function(dieRoll) {
-				showMessage(JSON.parse(dieRoll.body).name, JSON.parse(dieRoll.body).message);
+				showMessage(JSON.parse(dieRoll.body).name, JSON
+						.parse(dieRoll.body).message);
 			});
 		});
 	} catch (e) {
@@ -44,21 +48,20 @@ function connectMessages() {
 
 }
 
-$(document).ready(function() {
-	connectRolls();
-	connectMessages();
-	connectSettings();
-    $('#colorselector').colorselector({
-    	callback: function(value, color, title) {
-    		name = $("#name").val();
-    		charName = $("#char").val();
-    		settingsClient.send("/app/settings", {}, JSON.stringify({
-    			'name' : makeName(name, charName),
-    			'color' : color
-    		}));
-    	}
-    });
-});
+$(document).ready(
+		function() {
+			connectRolls();
+			connectMessages();
+			connectSettings();
+			$('#colorselector').colorselector({
+				callback : function(value, color, title) {
+					settingsClient.send("/app/settings", {}, JSON.stringify({
+						'name' : makeName(name, charName),
+						'color' : color
+					}));
+				}
+			});
+		});
 
 function makeName(name, charName) {
 	return charName + ' (' + name + ')'
@@ -123,8 +126,10 @@ function showMessage(name, message) {
 		var p = document.createElement('p');
 		p.style.wordWrap = 'break-word';
 		var dl = document.createElement('dl');
+		dl.style.color = stringToColorCode(name);
 		var dt = document.createElement('dt');
 		dt.appendChild(document.createTextNode(name));
+		dt.style.color = stringToColorCode(name);
 
 		dl.appendChild(dt);
 		dl.appendChild(dd);
@@ -148,6 +153,7 @@ function showRoll(name, numSides, result, isPrivate) {
 	$(dd).css('font-style', 'italic');
 	var myName = $('#name').val()
 	var myCharName = $('#char').val()
+	dd.style.color = stringToColorCode(makeName(myName, myCharName));
 	if (!isPrivate) {
 		dd.appendChild(document.createTextNode('d' + numSides + ' : ' + result));
 	} else if (isPrivate && name == makeName(myName, myCharName)) {
@@ -162,7 +168,9 @@ function showRoll(name, numSides, result, isPrivate) {
 		var p = document.createElement('p');
 		p.style.wordWrap = 'break-word';
 		var dl = document.createElement('dl');
+		dl.style.color = stringToColorCode(name);
 		var dt = document.createElement('dt');
+		dt.style.color = stringToColorCode(name);
 		dt.appendChild(document.createTextNode(name));
 
 		dl.appendChild(dt);
