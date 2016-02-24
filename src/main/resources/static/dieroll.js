@@ -12,6 +12,23 @@ function connectRolls() {
 	});
 }
 
+var color_codes = {};
+function connectSettings() {
+	var socket = new SockJS('/settings');
+	settingsClient = Stomp.over(socket);
+	try {
+		settingsClient.connect({}, function(frame) {
+			settingsClient.subscribe('/topic/settings', function(settings) {
+				color_codes[JSON.parse(settings.body).name] = JSON.parse(settings.body).color;
+				console.log(color_codes);
+			});
+		});
+	} catch (e) {
+
+	}
+
+}
+
 function connectMessages() {
 	var socket = new SockJS('/message');
 	messagesClient = Stomp.over(socket);
@@ -30,12 +47,18 @@ function connectMessages() {
 $(document).ready(function() {
 	connectRolls();
 	connectMessages();
+	connectSettings();
+    $('#colorselector').colorselector({
+    	callback: function(value, color, title) {
+    		name = $("#name").val();
+    		charName = $("#char").val();
+    		settingsClient.send("/app/settings", {}, JSON.stringify({
+    			'name' : makeName(name, charName),
+    			'color' : color
+    		}));
+    	}
+    });
 });
-
-function connect() {
-	connectRolls();
-	connectMessages();
-}
 
 function makeName(name, charName) {
 	return charName + ' (' + name + ')'
@@ -72,10 +95,13 @@ function talk() {
 	$("#message").val("");
 }
 
-var color_codes = {};
 function stringToColorCode(str) {
-	return (str in color_codes) ? color_codes[str] : (color_codes[str] = '#'
-			+ ('000000' + (Math.random() * 0xFFFFFF << 0).toString(16)).slice(-6));
+	if (!(str in color_codes)) {
+		settingsClient.send("/app/settings", {}, JSON.stringify({
+			'name' : str
+		}));
+	}
+	return color_codes[str];
 }
 
 function showMessage(name, message) {
@@ -87,10 +113,9 @@ function showMessage(name, message) {
 		lastRollerName = dl.find("dt").first().text();
 	}
 	var dd = document.createElement('dd');
-	var myName = $('#name').val()
-	var myCharName = $('#char').val()
 
 	dd.appendChild(document.createTextNode(message));
+	dd.style.color = stringToColorCode(name);
 
 	if (lastRollerName == name) {
 		dl.append(dd);
@@ -131,6 +156,7 @@ function showRoll(name, numSides, result, isPrivate) {
 		dd.appendChild(document.createTextNode('geheimer Wurf'));
 	}
 	if (lastRollerName == name) {
+		dd.style.color = stringToColorCode(name);
 		dl.append(dd);
 	} else {
 		var p = document.createElement('p');
