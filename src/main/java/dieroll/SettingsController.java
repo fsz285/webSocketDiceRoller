@@ -22,40 +22,38 @@ public class SettingsController {
 	@MessageMapping("/settings")
 	@SendTo("/topic/settings")
 	public Settings settings(Settings settings) throws Exception {
-		System.err.println(settings);
 		Properties p = new Properties();
 		try (InputStream is = new FileInputStream(settingsPath)) {
 			p.load(is);
 		}
-		try (OutputStream os = new FileOutputStream(settingsPath)) {
-			if (settings.getColor() != null) {
-				p.put(settings.getName() + "." + SettingsConstants.COLOR, settings.getColor());
-				p.store(os, settingsPath);
+		if (settings.getColor() != null) {
+			p.put(settings.getName() + "." + SettingsConstants.COLOR, settings.getColor());
+			try (OutputStream os = new FileOutputStream(settingsPath)) {
+				p.store(os, null);
+			}
+		} else {
+			String color = p.getProperty(settings.getName() + "." + SettingsConstants.COLOR);
+			if (color != null) {
+				settings.setColor(color);
 			} else {
-				String color = p.getProperty(settings.getName() + "." + SettingsConstants.COLOR);
-				if (color != null) {
-					settings.setColor(color);
-				} else {
-					settings.setColor(SettingsConstants.DEFAULT_COLOR);
-				}
+				settings.setColor(SettingsConstants.DEFAULT_COLOR);
 			}
 		}
 		return settings;
 	}
 
-//	@Override
-//	public void onApplicationEvent(ContextRefreshedEvent arg0) {
-//		File settingsFile = new File(settingsPath);
-//		if (!settingsFile.exists()) {
-//			settingsFile.getParentFile().mkdirs();
-//			try {
-//				settingsFile.createNewFile();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
-//	
-	
+	// @Override
+	// public void onApplicationEvent(ContextRefreshedEvent arg0) {
+	// File settingsFile = new File(settingsPath);
+	// if (!settingsFile.exists()) {
+	// settingsFile.getParentFile().mkdirs();
+	// try {
+	// settingsFile.createNewFile();
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// }
+	// }
+	//
 
 }

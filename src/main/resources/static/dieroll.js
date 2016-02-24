@@ -23,7 +23,6 @@ function connectSettings() {
 			settingsClient.subscribe('/topic/settings', function(settings) {
 				color_codes[JSON.parse(settings.body).name] = JSON
 						.parse(settings.body).color;
-				console.log(color_codes);
 			});
 		});
 	} catch (e) {
@@ -103,8 +102,15 @@ function stringToColorCode(str) {
 		settingsClient.send("/app/settings", {}, JSON.stringify({
 			'name' : str
 		}));
+		
 	}
-	return color_codes[str];
+	var color = color_codes[str]
+	var myName = $("#name").val();
+	var myChar = $("#char").val();
+	if (str == makeName(myName, myChar) && color != $("#colorselector option:selected").attr("data-color")) {
+		$("#colorselector").colorselector("setColor", color);
+	}
+	return color;
 }
 
 function showMessage(name, message) {
@@ -153,7 +159,7 @@ function showRoll(name, numSides, result, isPrivate) {
 	$(dd).css('font-style', 'italic');
 	var myName = $('#name').val()
 	var myCharName = $('#char').val()
-	dd.style.color = stringToColorCode(makeName(myName, myCharName));
+	dd.style.color = stringToColorCode(name);
 	if (!isPrivate) {
 		dd.appendChild(document.createTextNode('d' + numSides + ' : ' + result));
 	} else if (isPrivate && name == makeName(myName, myCharName)) {
