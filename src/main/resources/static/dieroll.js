@@ -50,8 +50,18 @@ function connectMessages() {
 
 }
 
+function initializeNames() {
+	if(localStorage.getItem(PLAYER_NAME_KEY)) {
+		$('#name').val(localStorage.getItem(PLAYER_NAME_KEY));
+	}
+	if(localStorage.getItem(CHAR_NAME_KEY)) {
+		$('#char').val(localStorage.getItem(CHAR_NAME_KEY));
+	}
+}
+
 $(document).ready(
 		function() {
+			initializeNames();
 			connectRolls();
 			connectMessages();
 			connectSettings();
