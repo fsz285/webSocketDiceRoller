@@ -3,6 +3,7 @@ package dieroll;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -30,6 +31,7 @@ public class SettingsController implements InitializingBean {
 	@SendTo("/topic/settings")
 	public Settings settings(Settings settings) throws Exception {
 		Properties p = new Properties();
+		createSettingsFileIfNotExisting();
 		try (InputStream is = new FileInputStream(settingsPath)) {
 			p.load(is);
 		}
@@ -57,6 +59,13 @@ public class SettingsController implements InitializingBean {
 			settingsPath = userDir.toPath().resolve("settings.properties").toAbsolutePath().toString();
 		}
 		LOG.info("Using settings path: " + settingsPath);
+	}
+	
+	private void createSettingsFileIfNotExisting() throws IOException{
+		Path settingsFile = Paths.get(settingsPath);
+		if(!Files.exists(settingsFile)){
+			Files.createFile(settingsFile);
+		}
 	}
 
 	// @Override
