@@ -32,7 +32,7 @@
 	<div class="container">
 		<div id="conversationDiv">
 			<form class="form-inline">
-				<p>
+				<div>
 					<div class="form-group">
 						<input type="text" class="form-control intput-lg" id="name" placeholder="Name"></input>
 					</div>
@@ -56,19 +56,19 @@
 						    <option value="12" data-color="#000080">Navy</option>
 						</select>
 					</div>
-				</p>
-				<p>
+				</div>
+				<div>
 					<button id="roll20" onclick="roll(20);" type="button" class="btn btn-default btn-lg">d20</button>
 					<button id="roll12" onclick="roll(12);" type="button" class="btn btn-default btn-lg">d12</button>
 					<button id="roll10" onclick="roll(10);" type="button" class="btn btn-default btn-lg">d10</button>
 					<button id="roll8" onclick="roll(8);" type="button" class="btn btn-default btn-lg">d8</button>
 					<button id="roll6" onclick="roll(6);" type="button" class="btn btn-default btn-lg">d6</button>
 					<button id="roll4" onclick="roll(4);" type="button" class="btn btn-default btn-lg">d4</button>
-				</p>
-				<p>
+				</div>
+				<div>
 <!-- 					<button id="connect" type="button" class="btn btn-primary">Connect</button> -->
 					<input type="checkbox" id="isPrivate" data-toggle="toggle"> Geheimer Wurf</input>
-				</p>
+				</div>
 			</form>
 			<div id="rollContainer" class="rollContainer">
 				<p id="response"></p>
