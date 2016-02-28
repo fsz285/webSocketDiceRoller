@@ -1,11 +1,9 @@
 package dieroll;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Files;
 import java.util.Properties;
 
 import org.springframework.beans.factory.annotation.Value;
