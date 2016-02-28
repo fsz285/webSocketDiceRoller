@@ -40,18 +40,4 @@ public class SettingsController {
 		return settings;
 	}
 
-	// @Override
-	// public void onApplicationEvent(ContextRefreshedEvent arg0) {
-	// File settingsFile = new File(settingsPath);
-	// if (!settingsFile.exists()) {
-	// settingsFile.getParentFile().mkdirs();
-	// try {
-	// settingsFile.createNewFile();
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	// }
-	//
-
 }
