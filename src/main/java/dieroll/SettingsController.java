@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.Properties;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class SettingsController {
+	
+	private static final Logger LOG = LoggerFactory.getLogger(SettingsController.class);
 
 	@Value("${settingsPath}")
 	private String settingsPath;
