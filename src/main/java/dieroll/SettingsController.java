@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -49,6 +51,11 @@ public class SettingsController implements InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		if(settingsPath == null || settingsPath.isEmpty()){
+			LOG.error("No explicit settings path defined falling back to default.");
+			File userDir = new File(System.getProperty("user.dir"));
+			settingsPath = userDir.toPath().resolve("settings.properties").toAbsolutePath().toString();
+		}
 		LOG.info("Using settings path: " + settingsPath);
 	}
 
