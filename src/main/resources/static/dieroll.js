@@ -59,9 +59,19 @@ function initializeNames() {
 	}
 }
 
+function addNameSaveHandlers() {
+	$('#name').change(function(){
+		localStorage.setItem(PLAYER_NAME_KEY, $('#name').val());
+	});
+	$('#char').change(function(){
+		localStorage.setItem(CHAR_NAME_KEY, $('#char').val());
+	});
+}
+
 $(document).ready(
 		function() {
 			initializeNames();
+			addNameSaveHandlers();
 			connectRolls();
 			connectMessages();
 			connectSettings();
