@@ -10,13 +10,14 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class SettingsController {
+public class SettingsController implements InitializingBean {
 	
 	private static final Logger LOG = LoggerFactory.getLogger(SettingsController.class);
 
@@ -44,6 +45,11 @@ public class SettingsController {
 			}
 		}
 		return settings;
+	}
+
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		LOG.info("Using settings path: " + settingsPath);
 	}
 
 	// @Override
