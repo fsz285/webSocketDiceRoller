@@ -1,6 +1,9 @@
 var stompClient;
 var messagesClient;
 
+var PLAYER_NAME_KEY = "playerName";
+var CHAR_NAME_KEY = "characterName";
+
 function connectRolls() {
 	var socket = new SockJS('/roll');
 	rollsClient = Stomp.over(socket);
