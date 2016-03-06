@@ -61,7 +61,7 @@ public class SettingsController implements InitializingBean {
 		LOG.info("Using settings path: " + settingsPath);
 	}
 	
-	private void createSettingsFileIfNotExisting() throws IOException{
+	private synchronized void createSettingsFileIfNotExisting() throws IOException{
 		Path settingsFile = Paths.get(settingsPath);
 		if(!Files.exists(settingsFile)){
 			Files.createFile(settingsFile);
