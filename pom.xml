@@ -5,12 +5,13 @@
 
     <artifactId>websocket-diceroller</artifactId>
     <groupId>websocket-diceroller</groupId>
-    <version>0.1.0</version>
+    <version>0.1.0-SNAPSHOT</version>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>1.3.0.RELEASE</version>
+        <relativePath />
     </parent>
 
     <dependencies>
