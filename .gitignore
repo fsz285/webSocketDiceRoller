@@ -8,3 +8,6 @@ target/
 .classpath
 .checkstyle
 bin/
+
+# Dice Roller Transient Files
+/settings.properties
