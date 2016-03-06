@@ -1,6 +1,9 @@
 var stompClient;
 var messagesClient;
 
+var PLAYER_NAME_KEY = "playerName";
+var CHAR_NAME_KEY = "characterName";
+
 function connectRolls() {
 	var socket = new SockJS('/roll');
 	rollsClient = Stomp.over(socket);
@@ -47,8 +50,28 @@ function connectMessages() {
 
 }
 
+function initializeNames() {
+	if(localStorage.getItem(PLAYER_NAME_KEY)) {
+		$('#name').val(localStorage.getItem(PLAYER_NAME_KEY));
+	}
+	if(localStorage.getItem(CHAR_NAME_KEY)) {
+		$('#char').val(localStorage.getItem(CHAR_NAME_KEY));
+	}
+}
+
+function addNameSaveHandlers() {
+	$('#name').change(function(){
+		localStorage.setItem(PLAYER_NAME_KEY, $('#name').val());
+	});
+	$('#char').change(function(){
+		localStorage.setItem(CHAR_NAME_KEY, $('#char').val());
+	});
+}
+
 $(document).ready(
 		function() {
+			initializeNames();
+			addNameSaveHandlers();
 			connectRolls();
 			connectMessages();
 			connectSettings();
