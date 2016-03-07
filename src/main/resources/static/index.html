@@ -2,12 +2,12 @@
 <html>
 <head>
 <title>DiceRoller</title>
-<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="sockjs-0.3.4.js"></script>
 <script src="stomp.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" integrity="sha512-K1qjQ+NcF2TYO/eI3M6v8EiNYZfA95pQumfvcVrTHtwQVDG+aHRqLi/ETn2uB+1JqwYqVG3LIvdm9lj6imS/pQ==" crossorigin="anonymous"></script>
 <script src="bootstrap-colorselector.js"></script>
-<link rel="stylesheet" type="text/css" href="bootstrap-colorselector.css" />
+<link rel="stylesheet" type="text/css" href="bootstrap-colorselector.css">
 <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
 <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
 <script src="dieroll.js"></script>
@@ -32,7 +32,7 @@
 	<div class="container">
 		<div id="conversationDiv">
 			<form class="form-inline">
-				<p>
+				<div>
 					<div class="form-group">
 						<input type="text" class="form-control intput-lg" id="name" placeholder="Name"></input>
 					</div>
@@ -56,24 +56,23 @@
 						    <option value="12" data-color="#000080">Navy</option>
 						</select>
 					</div>
-				</p>
-				<p>
+				</div>
+				<div>
 					<button id="roll20" onclick="roll(20);" type="button" class="btn btn-default btn-lg">d20</button>
 					<button id="roll12" onclick="roll(12);" type="button" class="btn btn-default btn-lg">d12</button>
 					<button id="roll10" onclick="roll(10);" type="button" class="btn btn-default btn-lg">d10</button>
 					<button id="roll8" onclick="roll(8);" type="button" class="btn btn-default btn-lg">d8</button>
 					<button id="roll6" onclick="roll(6);" type="button" class="btn btn-default btn-lg">d6</button>
 					<button id="roll4" onclick="roll(4);" type="button" class="btn btn-default btn-lg">d4</button>
-				</p>
-				<p>
-<!-- 					<button id="connect" type="button" class="btn btn-primary">Connect</button> -->
-					<input type="checkbox" id="isPrivate" data-toggle="toggle"> Geheimer Wurf</input>
-				</p>
+				</div>
+				<div>
+					<input type="checkbox" id="isPrivate" data-toggle="toggle"><label for="isPrivate"> Geheimer Wurf</label>
+				</div>
 			</form>
 			<div id="rollContainer" class="rollContainer">
 				<p id="response"></p>
 			</div>
-			<hrule/>
+			<hr/>
 			<div class="form-group">
 				<label for="message">Message:</label>
 				<input type="text" class="form-control" id="message">
